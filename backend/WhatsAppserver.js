@@ -12,7 +12,7 @@ console.log("process.env ", process.env);
 // const accountSid = process.env.TWILIO_ACCOUNT_SID;
 // const authToken = process.env.TWILIO_AUTH_TOKEN;
 const TWILIO_ACCOUNT_SID = "AC1feaa08768440ee10733bf0e3b9ceb3c";
-const TWILIO_AUTH_TOKEN = "705ff897c918cc901a0d13034cf378c2";
+const TWILIO_AUTH_TOKEN = "e0a8197a5ff701fe893cf1e08d05820a";
 // console.log("accountSid ", accountSid);
 // console.log("authToken ", authToken);
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
