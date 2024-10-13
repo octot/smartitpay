@@ -1,5 +1,11 @@
-.App {
+html {
+  background: rgba(201, 112, 3, 0.25);
+  border-radius: 16px;
+}
+
+.App  {
   text-align: center;
+
 }
 
 .App-logo {
