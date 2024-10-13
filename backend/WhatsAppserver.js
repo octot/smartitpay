@@ -8,7 +8,6 @@ const port = 4000;
 app.use(bodyParser.json());
 app.use(cors());
 require("dotenv").config();
-console.log("process.env ", process.env);
 // const accountSid = process.env.TWILIO_ACCOUNT_SID;
 // const authToken = process.env.TWILIO_AUTH_TOKEN;
 const TWILIO_ACCOUNT_SID = "AC1feaa08768440ee10733bf0e3b9ceb3c";

@@ -1,7 +1,7 @@
 import { React, useRef, useState, useEffect } from "react";
 import { styled } from "@mui/material/styles"; // For styled components
 import { Typography, Grid } from "@mui/material"; // Importing components from @mui/material
-import { URI } from "../Constants";
+import { URI } from "./Constants";
 const useStyles = styled((theme) => ({
   root: {
     display: "flex",
@@ -44,6 +44,8 @@ const WhatsAppSender = ({ resultToWhatsapp }) => {
     }
     sendRequest();
   };
+
+  console.log("URI", URI);
   const sendRequest = () => {
     fetch(URI, {
       method: "POST",
