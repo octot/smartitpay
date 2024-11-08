@@ -1,29 +1,9 @@
 import { React, useRef, useState, useEffect } from "react";
 import { styled } from "@mui/material/styles"; // For styled components
-import { Typography, Grid } from "@mui/material"; // Importing components from @mui/material
+import { Typography, Grid, Button } from "@mui/material"; // Importing components from @mui/material
 import { URI } from "./Constants";
-const useStyles = styled((theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: "100vh",
-    marginTop: "-140px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    width: "300px",
-  },
-  button: {
-    marginTop: theme.spacing(2),
-  },
-}));
 const WhatsAppSender = ({ resultToWhatsapp }) => {
   console.log("data of resultToWhatsapp ", resultToWhatsapp);
-  const classes = useStyles();
   const to = "+918714596258";
   // const to = '+919567831387';
   const [status, setStatus] = useState("");
@@ -83,7 +63,6 @@ const WhatsAppSender = ({ resultToWhatsapp }) => {
       // prevResultToWhatsapp.current !== resultToWhatsapp
     ) {
       console.log("sendMessageCalled");
-      sendMessage();
       hasSentMessage.current = true; // Mark that the message has been sent
     } else {
       isMounted.current = true;
@@ -107,6 +86,11 @@ const WhatsAppSender = ({ resultToWhatsapp }) => {
       >
         <Grid item>
           <Typography variant="body1">{status}</Typography>
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={sendMessage}>
+            send
+          </Button>
         </Grid>
       </Grid>
     </div>
