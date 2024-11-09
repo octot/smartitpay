@@ -390,18 +390,16 @@ const ExcelReader = () => {
             const toNewDate = new Date(
               new Date(toDate).setDate(new Date(toDate).getDate() + 5)
             ).toLocaleDateString("en-GB");
-            // // // console.log("toDate ", toNewDate);
             var stringBuilder = "";
             stringBuilder += `SMARTPOINT E-PAY\n`;
             stringBuilder += `Class hour updates\n`;
-            stringBuilder +=
-              `(${fromDate.split("-").reverse().join(".")} to ${toDate
-                .split("-")
-                .reverse()
-                .join(".")})` + "\n\n";
+            stringBuilder += `(${fromDate
+              .split("-")
+              .reverse()
+              .join(".")} to ${toDate.split("-").reverse().join(".")})\n\n`;
             stringBuilder += `Tuition ID: ${tutorId}\n`;
             stringBuilder += `Tutor: ${tutorName}\n\n`;
-            classesAttended.map((cls, clsIndex) => {
+            classesAttended.map((cls) => {
               stringBuilder += `${cls["Session Date"]
                 .split("-")
                 .reverse()

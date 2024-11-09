@@ -42,6 +42,7 @@ const filterExcelData = (excelData, fromDate, toDate, payroll, filterCase) => {
         const result = IsOldData && isAfterPayroll;
         return result;
       }
+      return false;
     });
   } else {
     return [];
