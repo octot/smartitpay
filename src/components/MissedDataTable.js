@@ -8,8 +8,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
-  TableColumn,
+  Button
 } from "@mui/material";
 import * as XLSX from "xlsx";
 const MissedDataTable = ({

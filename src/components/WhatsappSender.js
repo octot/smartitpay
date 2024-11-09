@@ -1,5 +1,4 @@
 import { React, useRef, useState, useEffect } from "react";
-import { styled } from "@mui/material/styles"; // For styled components
 import { Typography, Grid, Button } from "@mui/material"; // Importing components from @mui/material
 import { URI } from "./Constants";
 const WhatsAppSender = ({ resultToWhatsapp }) => {

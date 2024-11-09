@@ -10,7 +10,6 @@ const filterExcelData = (excelData, fromDate, toDate, payroll, filterCase) => {
   if (filterCase === 'case1') {
     return excelData.filter((row, index) => {
       if (index === 0) return true;
-      const tutor = row[2];
       const classDateData = row[3];
       const classDate = classDateData ? new Date(classDateData) : null;
       const fromDateObj = fromDate ? new Date(fromDate) : null;

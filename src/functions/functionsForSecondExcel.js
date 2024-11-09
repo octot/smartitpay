@@ -25,7 +25,7 @@ export function filterRecords(filteredBasedOnIsRequired, transformedData) {
       Object.keys(filteredBasedOnIsRequired).forEach((tutorID) => {
         transformedData.forEach((record) => {
           let numberPart = tutorID.split(":")[0].trim();
-          if (record.tutorID == numberPart) {
+          if (record.tutorID === numberPart) {
             filteredTutorJsonData[tutorID] = filteredBasedOnIsRequired[tutorID];
             // // console.log(
             // // "filterRecords filteredTutorJsonData ",
@@ -110,12 +110,12 @@ export function combineData(uniqueData, tutorTotalDuration) {
     uniqueData.forEach((record) => {
       const tutorID = record.tutorID;
       const tutorDurationObject = tutorTotalDuration.find(
-        (obj) => Object.keys(obj)[0].split(" ")[0] == tutorID
+        (obj) => Object.keys(obj)[0].split(" ")[0] === tutorID
       );
       let totalDurationOfSessionTaken = [];
       let classesAttended = [];
       let parentPhoneNumber = [];
-      for (const [tutorName, tutorData] of Object.entries(
+      for (const [, tutorData] of Object.entries(
         tutorDurationObject
       )) {
         classesAttended = tutorData[0].classesAttended;
@@ -164,7 +164,6 @@ export function populateTutorJsonData(payRollFilteredData) {
           sessions: [],
         };
       }
-      let sessions = [];
       const obj = {
         "SL NO": entry[0],
         "Submit Date": entry[1],
@@ -181,7 +180,7 @@ export function populateTutorJsonData(payRollFilteredData) {
       tutorJsonDataRecord[key].sessions.push(obj);
     }
 
-    for (let [key, value] of Object.entries(tutorJsonDataRecord)) {
+    for (let [, value] of Object.entries(tutorJsonDataRecord)) {
       if (value.sessions) {
         value.sessions = sortByDateSessionRecords(value.sessions);
       }
