@@ -1,7 +1,7 @@
 .heading {
   font-size: 30px;
   text-align: center;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 .container {
   display: flex;
@@ -13,25 +13,25 @@
   padding: 10px;
 }
 .container > div label {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   font-size: 16px;
   font-weight: bold;
 }
 .container > div input {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 14px;
 }
 .container > div input:focus,
 .container > div input:focus + label {
-  color: #4CAF50; /* Green color */
+  color: #4caf50; /* Green color */
 }
 .input {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 14px;
   border: 1px solid black; /* Add this line */
 }
 .input:focus {
-  color: #4CAF50; /* Green color */
+  color: #4caf50; /* Green color */
   outline: none; /* Remove the default focus outline */
   border: 1px solid black; /* Add this line */
 }
@@ -40,7 +40,6 @@
     flex: 1 1 100%;
   }
 }
-
 
 .tution-grid {
   display: grid;
@@ -91,17 +90,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-height: 600px;
+  overflow-y: auto;
 }
 
-.close-button, .open-button {
+.close-button,
+.open-button {
   margin-top: 20px;
   padding: 10px 20px;
-  background: #007BFF;
+  background: #007bff;
   color: white;
   border: none;
   cursor: pointer;
 }
 
-.close-button:hover, .open-button:hover {
+.close-button:hover,
+.open-button:hover {
   background: #0056b3;
 }

@@ -8,9 +8,10 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
   TableColumn,
 } from "@mui/material";
-
+import * as XLSX from "xlsx";
 const MissedDataTable = ({
   tutorDetailsFromFirstExcel,
   tutorDetailsFromSecondExcel,
@@ -34,15 +35,16 @@ const MissedDataTable = ({
   );
 
   const combinedData = Array.from({ length: maxLength }, (_, index) => ({
-    column1: tutorDetailsFromFirstExcel[index] || "",
-    column2: tutorDetailsFromSecondExcel[index] || "",
-    column3: tutorDetailsFromCombinedExcel[index] || "",
-    column4: missingTutorDetailsFromCombinedExcel[index] || "",
+    tutorDetailsFromFirstExcel: tutorDetailsFromFirstExcel[index] || "",
+    tutorDetailsFromSecondExcel: tutorDetailsFromSecondExcel[index] || "",
+    tutorDetailsFromCombinedExcel: tutorDetailsFromCombinedExcel[index] || "",
+    missingTutorDetailsFromCombinedExcel:
+      missingTutorDetailsFromCombinedExcel[index] || "",
   }));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  console.log(combinedData);
+  console.log("combinedData", combinedData);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -51,8 +53,33 @@ const MissedDataTable = ({
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  const handleDownloadExcel = () => {
+    const currentDate = new Date();
+    const options = {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false, // Use 24-hour time
+    };
+    const timeStamp = currentDate.toLocaleString("en-GB", options);
+    const fileName = `ViewRecords_${timeStamp}.xlsx`;
+    const worksheet = XLSX.utils.json_to_sheet(combinedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, fileName);
+  };
   return (
     <TableContainer component={Paper}>
+      <div>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button variant="contained" onClick={handleDownloadExcel}>
+            Download Excel
+          </Button>
+        </div>
+      </div>
       <Table>
         <TableHead>
           <TableRow>
@@ -66,10 +93,12 @@ const MissedDataTable = ({
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((row, rowIndex) => (
               <TableRow key={rowIndex}>
-                <TableCell>{row.column1}</TableCell>
-                <TableCell>{row.column2}</TableCell>
-                <TableCell>{row.column3}</TableCell>
-                <TableCell>{row.column4}</TableCell>
+                <TableCell>{row.tutorDetailsFromFirstExcel}</TableCell>
+                <TableCell>{row.tutorDetailsFromSecondExcel}</TableCell>
+                <TableCell>{row.tutorDetailsFromCombinedExcel}</TableCell>
+                <TableCell>
+                  {row.missingTutorDetailsFromCombinedExcel}
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>
