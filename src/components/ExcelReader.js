@@ -139,7 +139,7 @@ const ExcelReader = () => {
       setCopyTutorJsonData({ ...tutorJsonData });
     }
     // // // console.log("copyTutorJsonData after useEffect", copyTutorJsonData);
-  }, [tutorJsonData]);
+  }, [tutorJsonData,copyTutorJsonData]);
   // // // console.log("data from tutorJsonData Excelreader", tutorJsonData);
   // // // console.log("data from copyTutorJsonData Excelreader", copyTutorJsonData);
   const filteredBasedOnIsRequired =
@@ -399,7 +399,7 @@ const ExcelReader = () => {
               .join(".")} to ${toDate.split("-").reverse().join(".")})\n\n`;
             stringBuilder += `Tuition ID: ${tutorId}\n`;
             stringBuilder += `Tutor: ${tutorName}\n\n`;
-            classesAttended.map((cls) => {
+            classesAttended.forEach((cls) => {
               stringBuilder += `${cls["Session Date"]
                 .split("-")
                 .reverse()
