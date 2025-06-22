@@ -9,18 +9,20 @@ app.use(cors());
 require("dotenv").config();
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
 const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+const TWILIO_FROM_NUMBER =process.env.TWILIO_FROM_NUMBER;
+const TWILIO_TO_NUMBER=process.env.TWILIO_TO_NUMBER;
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-const twilioNumber = "+14155238886";
+
 app.get("/", (req, res) => {
   res.send("Hello from WhatsAppserver!");
 });
 app.post("/send-whatsapp", (req, res) => {
-  const { message, to } = req.body;
+  const { message } = req.body;
   client.messages
     .create({
       body: message,
-      from: `whatsapp:${twilioNumber}`,
-      to: `whatsapp:${to}`,
+      from: `whatsapp:${TWILIO_FROM_NUMBER}`,
+      to: `whatsapp:${TWILIO_TO_NUMBER}`,
     })
     .then((message) => {
 

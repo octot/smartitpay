@@ -4,9 +4,6 @@ import { URI } from "./Constants";
 import './WhatsappSender.css'
 const WhatsAppSender = ({ resultToWhatsapp }) => {
   const [buttonState, setButtonState] = useState('');
-  
-  const to = "+918714596258";
-  // const to = '+919567831387';
   const [status, setStatus] = useState("");
   const [lastSentTime, setLastSentTime] = useState(null);
   const isMounted = useRef(false);
@@ -63,7 +60,7 @@ const WhatsAppSender = ({ resultToWhatsapp }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ message: resultToWhatsapp, to }),
+      body: JSON.stringify({ message: resultToWhatsapp }),
     })
       .then((response) => response.json())
       .then((data) => {
