@@ -11,6 +11,7 @@ import {
   Button
 } from "@mui/material";
 import * as XLSX from "xlsx";
+import './MissedDataTable.css'
 const MissedDataTable = ({
   tutorDetailsFromFirstExcel,
   tutorDetailsFromSecondExcel,
@@ -18,14 +19,7 @@ const MissedDataTable = ({
   missingTutorDetailsFromCombinedExcel,
   headings,
 }) => {
-  console.log(
-    "typetutorDetailsFromFirstExcel",
-    typeof tutorDetailsFromFirstExcel
-  );
-  console.log(
-    "tutorDetailsFromFirstExcelData",
-    Object.keys(tutorDetailsFromFirstExcel)
-  );
+
   const maxLength = Math.max(
     tutorDetailsFromFirstExcel.length,
     tutorDetailsFromSecondExcel.length,
@@ -43,7 +37,7 @@ const MissedDataTable = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  console.log("combinedData", combinedData);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -71,47 +65,48 @@ const MissedDataTable = ({
     XLSX.writeFile(workbook, fileName);
   };
   return (
-    <TableContainer component={Paper}>
-      <div>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button variant="contained" onClick={handleDownloadExcel}>
-            Download Excel
-          </Button>
-        </div>
-      </div>
-      <Table>
-        <TableHead>
-          <TableRow>
-            {headings.map((heading, index) => (
-              <TableCell key={index}>{heading}</TableCell>
-            ))}
+ <TableContainer component={Paper} className="table-container">
+  <div className="download-section">
+    <div className="download-button-wrapper">
+      <Button variant="contained" onClick={handleDownloadExcel} className="download-button">
+        Download Excel
+      </Button>
+    </div>
+  </div>
+  <Table className="styled-table">
+    <TableHead className="table-header">
+      <TableRow>
+        {headings.map((heading, index) => (
+          <TableCell key={index} className="header-cell">{heading}</TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {combinedData
+        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        .map((row, rowIndex) => (
+          <TableRow key={rowIndex} className="table-row">
+            <TableCell className="table-cell">{row.tutorDetailsFromFirstExcel}</TableCell>
+            <TableCell className="table-cell">{row.tutorDetailsFromSecondExcel}</TableCell>
+            <TableCell className="table-cell">{row.tutorDetailsFromCombinedExcel}</TableCell>
+            <TableCell className="table-cell">
+              {row.missingTutorDetailsFromCombinedExcel}
+            </TableCell>
           </TableRow>
-        </TableHead>
-        <TableBody>
-          {combinedData
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
-                <TableCell>{row.tutorDetailsFromFirstExcel}</TableCell>
-                <TableCell>{row.tutorDetailsFromSecondExcel}</TableCell>
-                <TableCell>{row.tutorDetailsFromCombinedExcel}</TableCell>
-                <TableCell>
-                  {row.missingTutorDetailsFromCombinedExcel}
-                </TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25, 50]}
-        component="div"
-        count={combinedData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </TableContainer>
+        ))}
+    </TableBody>
+  </Table>
+  <TablePagination
+    rowsPerPageOptions={[5, 10, 25, 50]}
+    component="div"
+    count={combinedData.length}
+    rowsPerPage={rowsPerPage}
+    page={page}
+    onPageChange={handleChangePage}
+    onRowsPerPageChange={handleChangeRowsPerPage}
+    className="pagination-container"
+  />
+</TableContainer>
   );
 };
 

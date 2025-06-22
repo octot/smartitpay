@@ -1,13 +1,13 @@
 export function transformData(secondFilteredData) {
   try {
-    // // console.log("transformData input ", secondFilteredData);
+   
     const outputOfTransformData = secondFilteredData.slice(1).map((item) => ({
       tutorID: item[3],
       submitTime: item[1],
       paymentToParentPerHr: item[11],
       parentPhoneNumber: item[8],
     }));
-    // // console.log("transformData output ", outputOfTransformData);
+   
     return outputOfTransformData;
   } catch (error) {
     console.error("Error in transformData:", error);
@@ -16,7 +16,7 @@ export function transformData(secondFilteredData) {
 }
 
 export function filterRecords(filteredBasedOnIsRequired, transformedData) {
-  // // console.log("filteredBasedOnIsRequired input ", filteredBasedOnIsRequired);
+ 
 
   try {
     const filteredTutorJsonData = {};
@@ -27,10 +27,7 @@ export function filterRecords(filteredBasedOnIsRequired, transformedData) {
           let numberPart = tutorID.split(":")[0].trim();
           if (record.tutorID === numberPart) {
             filteredTutorJsonData[tutorID] = filteredBasedOnIsRequired[tutorID];
-            // // console.log(
-            // // "filterRecords filteredTutorJsonData ",
-            // // filteredTutorJsonData
-            // // );
+           
           }
         });
       });
@@ -62,10 +59,6 @@ export function sortAndRemoveDuplicates(
   filteredTutorJsonData
 ) {
   try {
-    // // console.log(
-    // // `sortAndRemoveDuplicates input: filteredTransformedData: ${JSON.stringify(
-    // // filteredTransformedData
-    // // )}, filteredTutorJsonData: ${JSON.stringify(filteredTutorJsonData)} \n`);
     const sortedData = filteredTransformedData.sort(
       (a, b) => new Date(b.submitTime) - new Date(a.submitTime)
     );
@@ -93,10 +86,6 @@ export function sortAndRemoveDuplicates(
       }
     }
     const combinedRecords = combineData(uniqueData, tutorTotalDuration);
-    // // console.log(
-    // // `sortAndRemoveDuplicates output: combinedRecords: ${JSON.stringify(
-    // // combinedRecords
-    // // )} \n`);
     return combinedRecords;
   } catch (error) {
     console.error("Error in sortAndRemoveDuplicates:", error);
@@ -105,7 +94,6 @@ export function sortAndRemoveDuplicates(
 }
 export function combineData(uniqueData, tutorTotalDuration) {
   try {
-    // // console.log(`combineData input: tutorTotalDuration: ${JSON.stringify(tutorTotalDuration)},uniqueData: ${JSON.stringify(uniqueData)} \n`);
     const combinedData = [];
     uniqueData.forEach((record) => {
       const tutorID = record.tutorID;
@@ -135,7 +123,7 @@ export function combineData(uniqueData, tutorTotalDuration) {
         combinedData.push(totalDurationObj);
       }
     });
-    // // console.log("combineData output ", combinedData);
+   
     return combinedData;
   } catch (error) {
     console.error("Error in combineData:", error);
@@ -148,11 +136,11 @@ function sortByDateSessionRecords(sessions) {
     const dateB = new Date(b["Session Date"]);
     return dateA - dateB;
   });
-  // console.log("newSessions ", newSessions);
+  // 
   return newSessions;
 }
 export function populateTutorJsonData(payRollFilteredData) {
-  // // console.log(`payRollFilteredData input  ${payRollFilteredData} \n`);
+ 
   try {
     const tutorJsonDataRecord = {};
     for (let i = 1; i < payRollFilteredData.length; i++) {
@@ -185,7 +173,7 @@ export function populateTutorJsonData(payRollFilteredData) {
         value.sessions = sortByDateSessionRecords(value.sessions);
       }
     }
-    // console.log("payRollFilteredData output", tutorJsonDataRecord);
+    // 
     return tutorJsonDataRecord;
   } catch (error) {
     console.error("Error in populateTutorJsonData:", error);
@@ -193,14 +181,14 @@ export function populateTutorJsonData(payRollFilteredData) {
   }
 }
 export function populateFilteredBasedOnIsRequired(copyTutorJsonData) {
-  // // console.log("populateFilteredBasedOnIsRequired input", copyTutorJsonData);
+ 
   const filteredData = {};
   try {
     // Filter the data where `isRequired` is true
     for (const key in copyTutorJsonData) {
       if (copyTutorJsonData.hasOwnProperty(key)) {
         const filteredItems = [];
-        // // console.log("copyTutorJsonData[key]", copyTutorJsonData[key]);
+       
         if (copyTutorJsonData[key].checked) {
           for (const item of copyTutorJsonData[key].sessions) {
             if (item.isRequired === true) {
@@ -213,10 +201,8 @@ export function populateFilteredBasedOnIsRequired(copyTutorJsonData) {
         }
       }
     }
-    // // console.log("Filtered data based on isRequired", filteredData);
     return filteredData;
   } catch (error) {
-    console.error("Error in populateFilteredBasedOnIsRequired", error);
     return {}; // Return an empty object in case of error
   }
 }

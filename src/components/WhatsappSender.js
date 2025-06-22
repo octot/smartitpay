@@ -1,8 +1,10 @@
 import { React, useRef, useState, useEffect } from "react";
 import { Typography, Grid, Button } from "@mui/material"; // Importing components from @mui/material
 import { URI } from "./Constants";
+import './WhatsappSender.css'
 const WhatsAppSender = ({ resultToWhatsapp }) => {
-  console.log("data of resultToWhatsapp ", resultToWhatsapp);
+  const [buttonState, setButtonState] = useState('');
+  
   const to = "+918714596258";
   // const to = '+919567831387';
   const [status, setStatus] = useState("");
@@ -23,8 +25,38 @@ const WhatsAppSender = ({ resultToWhatsapp }) => {
     }
     sendRequest();
   };
+  const handleSendMessage = async () => {
+    setButtonState('loading');
+    setStatus('Sending message...');
 
-  console.log("URI", URI);
+    try {
+      // Call the sendMessage function
+      if (sendMessage) {
+        await sendMessage();
+      }
+
+      // Simulate success
+      setButtonState('success');
+      setStatus('Message sent successfully!');
+
+      // Reset after 2 seconds
+      setTimeout(() => {
+        setButtonState('');
+        setStatus('Ready to send');
+      }, 2000);
+
+    } catch (error) {
+      setButtonState('error');
+      setStatus('Failed to send message');
+
+      // Reset after 2 seconds
+      setTimeout(() => {
+        setButtonState('');
+        setStatus('Ready to send');
+      }, 2000);
+    }
+  };
+  
   const sendRequest = () => {
     fetch(URI, {
       method: "POST",
@@ -35,13 +67,13 @@ const WhatsAppSender = ({ resultToWhatsapp }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("response from api data ", data);
+        
         if (data.success) {
           setStatus(data.message);
-          console.log("messageDeliveredSuccess!");
+          
           setLastSentTime(Date.now()); // Update last sent time
         } else {
-          console.log("messageDeliveredFailed!");
+          
           setStatus(`Error sending message "${data.message}`);
         }
       })
@@ -52,7 +84,7 @@ const WhatsAppSender = ({ resultToWhatsapp }) => {
   };
 
   useEffect(() => {
-    console.log("useEffect called with resultToWhatsapp:", resultToWhatsapp);
+    
 
     // Check if the component is mounted and resultToWhatsapp has changed
     if (
@@ -61,7 +93,7 @@ const WhatsAppSender = ({ resultToWhatsapp }) => {
 
       // prevResultToWhatsapp.current !== resultToWhatsapp
     ) {
-      console.log("sendMessageCalled");
+      
       hasSentMessage.current = true; // Mark that the message has been sent
     } else {
       isMounted.current = true;
@@ -75,20 +107,34 @@ const WhatsAppSender = ({ resultToWhatsapp }) => {
     };
   }, [resultToWhatsapp]);
   return (
-    <div>
+    <div className="whatsapp-sender-container">
       <Grid
         container
         direction="column"
-        justify="center"
+        justifyContent="center"
         alignItems="center"
         spacing={2}
+        className="whatsapp-grid-container"
       >
-        <Grid item>
-          <Typography variant="body1">{status}</Typography>
+        <Grid item className="whatsapp-status-item">
+          <Typography
+            variant="body1"
+            className="whatsapp-status-text"
+          >
+            {status}
+          </Typography>
         </Grid>
-        <Grid item>
-          <Button variant="contained" onClick={sendMessage}>
-            send
+        <Grid item className="whatsapp-button-item">
+          <Button
+            variant="contained"
+            onClick={handleSendMessage}
+            className={`whatsapp-send-button ${buttonState}`}
+            disabled={buttonState === 'loading'}
+          >
+            {buttonState === 'loading' ? 'Sending...' :
+              buttonState === 'success' ? 'Sent!' :
+                buttonState === 'error' ? 'Failed' :
+                  '📱 Send WhatsApp'}
           </Button>
         </Grid>
       </Grid>

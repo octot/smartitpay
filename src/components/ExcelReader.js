@@ -3,7 +3,6 @@ import { useDropzone } from "react-dropzone";
 import * as XLSX from "xlsx";
 import filterExcelData from "../utils/filterExcelData";
 import secondFilteredExcelData from "../utils/secondFilteredExcelData";
-import WhatsAppSender from "./WhatsappSender";
 import "./ExcelReader.css";
 import {
   populateFilteredBasedOnIsRequired,
@@ -16,14 +15,21 @@ import { TextField } from "@mui/material"; // Example imports
 import Grid from "@mui/material/Grid";
 import MissedData from "./MissedData";
 import { Button } from "@mui/material";
+import TutionDetailsWrapper from './TutionDetailsWrapper'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { format } from 'date-fns';
 const ExcelReader = () => {
   const [excelData, setExcelData] = useState(null);
   const [excelData2, setExcelData2] = useState(null);
   const [fileName, setFileName] = useState("");
   const [fileName2, setFileName2] = useState("");
+  // 2022-01-08
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [payroll, setPayroll] = useState("");
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [grandparentChecked, setGrandparentChecked] = useState(true);
   const openPopup = () => {
@@ -31,12 +37,6 @@ const ExcelReader = () => {
   };
   const closePopup = () => {
     setIsPopupOpen(false);
-  };
-  const dropzoneStyles = {
-    border: "2px dashed #cccccc",
-    padding: "20px",
-    textAlign: "center",
-    cursor: "pointer",
   };
   const onDrop = useCallback((acceptedFiles) => {
     const reader = new FileReader();
@@ -75,32 +75,43 @@ const ExcelReader = () => {
       accept: ".xlsx, .xls",
       onDrop: onDrop2,
     });
-  const handleFromDateChange = (event) => {
-    setFromDate(event.target.value);
+  const handleFromDateChange = (newValue) => {
+    if (newValue) {
+      const formattedDate = format(newValue, 'dd-MM-yyyy');
+      
+      setFromDate(newValue); // Keep original Date object
+    }
   };
-  const handleToDateChange = (event) => {
-    setToDate(event.target.value);
+  const handleToDateChange = (newValue) => {
+    if (newValue) {
+      const formattedDate = format(newValue, 'dd-MM-yyyy');
+      
+      setToDate(newValue); // Keep original Date object
+    }
   };
-  const handlePayrollChange = (event) => {
-    setPayroll(event.target.value);
+  const handlePayrollChange = (newValue) => {
+    if (newValue) {
+      const formattedDate = format(newValue, 'dd-MM-yyyy');
+      
+      setPayroll(newValue); // Keep original Date object
+    }
   };
   function missedStudentRecords(combinedArray, fromDate) {
-    // // // console.log("missedRecords output", combinedArray);
     let fromDateObj = new Date(fromDate);
     let status = "(missed)";
     for (let i = 0; i < combinedArray.length; ++i) {
       let eachStudentRecord = combinedArray[i];
-      // // // console.log("eachStudentRecord", eachStudentRecord);
+
       let sessionDateRecords = new Date(eachStudentRecord[3]);
-      // // // console.log("sessionDateRecords", sessionDateRecords);
+
       if (sessionDateRecords < fromDateObj) {
-        // // // console.log("sessionDateRecords", true);
+
         eachStudentRecord["status"] = status;
       } else {
         eachStudentRecord["status"] = "";
       }
     }
-    // console.log("missedRecords output", combinedArray);
+    // 
     return combinedArray;
   }
   const filteredExcelData = filterExcelData(
@@ -117,36 +128,36 @@ const ExcelReader = () => {
     payroll,
     "case2"
   );
-  // // // console.log("data from filteredExcelData Excelreader", filteredExcelData);
-  // // // console.log(
-  // // // "data from payRollFilteredExcelData Excelreader",
-  // // // payRollFilteredExcelData
-  // // // );
+
+
   const combinedArray = [...filteredExcelData, ...payRollFilteredExcelData];
   const missedRecordsArray = missedStudentRecords(combinedArray, fromDate);
-  // // // console.log("data from missedRecordsArray Excelreader", missedRecordsArray);
+
   const payRollFilteredData = [...new Set(missedRecordsArray)];
   const tutorJsonData = populateTutorJsonData(payRollFilteredData);
+  
   const [copyTutorJsonData, setCopyTutorJsonData] = useState({});
   const isManuallyUpdated = useRef(false);
   useEffect(() => {
-    // // // // console.log('tutorJsonData:', tutorJsonData);
+    // 
     if (
       !isManuallyUpdated.current &&
       tutorJsonData &&
       JSON.stringify(tutorJsonData) !== JSON.stringify(copyTutorJsonData)
+
     ) {
+
       setCopyTutorJsonData({ ...tutorJsonData });
     }
-    // // // console.log("copyTutorJsonData after useEffect", copyTutorJsonData);
-  }, [tutorJsonData,copyTutorJsonData]);
-  // // // console.log("data from tutorJsonData Excelreader", tutorJsonData);
-  // // // console.log("data from copyTutorJsonData Excelreader", copyTutorJsonData);
+
+  }, [tutorJsonData, copyTutorJsonData]);
+
+
   const filteredBasedOnIsRequired =
     populateFilteredBasedOnIsRequired(copyTutorJsonData);
   const secondFilteredData = secondFilteredExcelData(excelData2);
   const transformedData = transformData(secondFilteredData);
-  // // // // console.log("data from transformedData Excelreader", transformedData)
+  // 
   const { filteredTutorJsonData, filteredTransformedData } = filterRecords(
     filteredBasedOnIsRequired,
     transformedData
@@ -172,12 +183,11 @@ const ExcelReader = () => {
       },
       {}
     );
-    // console.log("updatedDataHandleGrandparentCheckbox", updatedData);
     setCopyTutorJsonData(updatedData);
   };
   const handleParentCheckbox = (tutorKey) => {
     const isChecked = !copyTutorJsonData[tutorKey].checked;
-    // // console.log("isChecked_handleParentCheckbox", isChecked);
+    // // 
     setCopyTutorJsonData((prevState) => ({
       ...prevState,
       [tutorKey]: {
@@ -210,77 +220,105 @@ const ExcelReader = () => {
       },
     }));
     isManuallyUpdated.current = true;
-    // console.log("isChecked_handleChildCheckbox", allChecked);
-  };
+    // 
 
-  // console.log("copyTutorJsonData_AfterCheck", copyTutorJsonData);
+  };
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredTutors = Object.keys(copyTutorJsonData)
+    .filter(key => key.toLowerCase().includes(searchTerm.toLowerCase()))
+    .reduce((acc, key) => {
+      acc[key] = copyTutorJsonData[key];
+      return acc;
+    }, {});
+
   return (
     <div>
-      <h2 class="heading">Smart Report</h2>
+      <div className="tuition-details-header-smart-pay">
+        <h2 className="tuition-details-title-smart-pay">Smart Pay</h2>
+        <p className="tuition-details-subtitle-smart-pay">
+        </p>
+      </div>
       <div className="container">
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-            <TextField
-              label={<label className="label">From Date</label>}
-              id="fromDate"
-              type="date"
-              value={fromDate}
-              onChange={handleFromDateChange}
-              variant="outlined"
-              fullWidth
-              required
-              InputProps={{
-                className: "input",
-              }}
-              InputLabelProps={{
-                shrink: true,
-                style: { marginTop: "-8px" },
-              }}
-            />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="From Date"
+                value={fromDate}
+                id="fromDate"
+                onChange={handleFromDateChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    required
+                    variant="outlined"
+                    InputProps={{
+                      className: "input",
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { marginTop: "-8px" },
+                    }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <TextField
-              label={<label className="label">To Date</label>}
-              id="toDate"
-              type="date"
-              value={toDate}
-              onChange={handleToDateChange}
-              variant="outlined"
-              fullWidth
-              required
-              InputProps={{
-                className: "input",
-              }}
-              InputLabelProps={{
-                shrink: true,
-                style: { marginTop: "-8px" },
-              }}
-            />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="To Date"
+                value={toDate}
+                onChange={handleToDateChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    required
+                    variant="outlined"
+                    InputProps={{
+                      className: "input",
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { marginTop: "-8px" },
+                    }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
           </Grid>
+
           <Grid item xs={12} sm={4}>
-            <TextField
-              label={<label className="label">Payroll</label>}
-              id="payroll"
-              type="date"
-              value={payroll}
-              onChange={handlePayrollChange}
-              variant="outlined"
-              fullWidth
-              InputProps={{
-                className: "input",
-              }}
-              InputLabelProps={{
-                shrink: true,
-                style: { marginTop: "-8px" },
-              }}
-            />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Payroll"
+                value={payroll}
+                onChange={handlePayrollChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    variant="outlined"
+                    InputProps={{
+                      className: "input",
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                      style: { marginTop: "-8px" },
+                    }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
           </Grid>
         </Grid>
       </div>
-      <div {...getRootProps()} style={dropzoneStyles}>
-        <input {...getInputProps()} />
+      <div {...getRootProps()} className="file-upload-container" >
+        <input {...getInputProps()} className="file-upload-input" />
         {/* Display the uploaded file name */}
-        <p>
+        <p className="file-upload-text">
           {fileName
             ? `Uploaded File: ${fileName}`
             : "Drag and drop an Excel file here, or click to select files (Timesheet Entry.xlsx)"}
@@ -288,171 +326,110 @@ const ExcelReader = () => {
       </div>
       <div>
         {copyTutorJsonData && (
-          <label>
+          <label className="main-checkbox">
             <input
               type="checkbox"
               checked={grandparentChecked}
               onChange={handleGrandparentCheckbox}
             />
+            Select All
           </label>
         )}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "10px",
-            justifyContent: "center",
-          }}
-        >
-          {Object.keys(copyTutorJsonData).map((tutorKey, index) => (
-            <div
-              key={tutorKey}
-              style={{ border: "1px solid black", padding: "10px" }}
-            >
-              <input
-                type="checkbox"
-                checked={copyTutorJsonData[tutorKey].checked}
-                onChange={() => handleParentCheckbox(tutorKey)}
-              />
-              <h3>{tutorKey}</h3>
-              <ul style={{ listStyleType: "none", padding: 0 }}>
-                {copyTutorJsonData[tutorKey].sessions.map(
-                  (session, itemIndex) => (
-                    <li
-                      key={`${tutorKey}-${itemIndex}`}
-                      style={{ marginBottom: "10px", textAlign: "center" }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <span>
-                          <input
-                            type="checkbox"
-                            checked={session.isRequired}
-                            onChange={() =>
-                              handleChildCheckbox(tutorKey, itemIndex)
-                            }
-                          />
-                          {session["Session Date"]}{" "}
-                          {session["Duration of Session session"]}{" "}
-                          {session["status"]}
-                        </span>
-                      </div>
-                    </li>
-                  )
-                )}
-              </ul>
+        <div>
+          <div>
+            <input
+              type="text"
+              placeholder="Search by Tution ID or Name"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input" />
+          </div>
+          <div className="parent-tutors-grid">
+            <div className="tutors-grid">
+              {Object.keys(filteredTutors).map((tutorKey, index) => (
+                <div key={tutorKey} className="tutor-card">
+                  <div className="tutor-header"
+                    checked={copyTutorJsonData[tutorKey].checked}
+                    onClick={() => handleParentCheckbox(tutorKey)}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={copyTutorJsonData[tutorKey].checked}
+                      onChange={() => handleParentCheckbox(tutorKey)}
+                    />
+                    <h3 className="tutor-title">{tutorKey}</h3>
+                  </div>
+                  <ul className="sessions-list">
+                    {copyTutorJsonData[tutorKey].sessions.map(
+                      (session, itemIndex) => (
+                        <li
+                          key={`${tutorKey}-${itemIndex}`}
+                          className="session-item"
+                          onClick={() => handleChildCheckbox(tutorKey, itemIndex)}
+                        >
+                          <div className="session-content">
+                            <input
+                              type="checkbox"
+                              checked={session.isRequired}
+                              onChange={() =>
+                                handleChildCheckbox(tutorKey, itemIndex)
+                              }
+                            />
+                            <div className="session-details">
+                              <span className="session-date">{session["Session Date"]}</span>
+                              <span className="session-duration">{session["Duration of Session session"]}</span>
+                              <span className="session-status">{session["status"]}</span>
+                            </div>
+                          </div>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
-      <div {...getRootProps2()} style={dropzoneStyles}>
-        <input {...getInputProps2()} />
+      <div {...getRootProps2()} className="file-upload-container">
+        <input {...getInputProps2()} className="file-upload-input" />
         {/* Display the uploaded file name */}
-        <p>
+        <p className="file-upload-text">
           {fileName2
             ? `Uploaded File: ${fileName2}`
             : "Drag and drop an Excel file here, or click to select files (Tuitions started By HR.xlsx)"}
         </p>
       </div>
-      <Button className="open-missed-data" onClick={openPopup}>
-        View OverView details
-      </Button>
+      <div class="button-container">
+        <button className="overview-btn open-missed-data-btn" onClick={openPopup}>
+          View OverView details
+        </button>
+      </div>
+
       {isPopupOpen && (
-        <div>
-          <div className="overlay" onClick={closePopup}></div>
-          <div className="popup">
-            <div className="popup-content">
-              <Button className="close-button" onClick={closePopup}>
+        <div className="popup-wrapper">
+          <div className="popup-overlay" onClick={closePopup}></div>
+          <div className="popup-container">
+            <div className="popup-content-wrapper">
+              <Button className="popup-close-btn" onClick={closePopup}>
                 Close
               </Button>
-              <MissedData
-                tutorJsonData={tutorJsonData}
-                transformedData={transformedData}
-                combinedAndSortedData={combinedAndSortedData}
-              />
+              <div className="missed-data-container">
+                <MissedData
+                  tutorJsonData={tutorJsonData}
+                  transformedData={transformedData}
+                  combinedAndSortedData={combinedAndSortedData}
+                />
+              </div>
             </div>
           </div>
         </div>
       )}
-      <div>
-        <h2>Tution Details</h2>
-        <div className="tution-grid">
-          {combinedAndSortedData.map((item, index) => {
-            const tutorKey = Object.keys(item)[0];
-            const tutionData = item[tutorKey];
-            const classesAttended = tutionData.classesAttended;
-            const tutorName =
-              classesAttended[0]["Tution ID and Tuttion Name"].split(" : ")[1];
-            const tutorId =
-              classesAttended[0]["Tution ID and Tuttion Name"].split(" : ")[0];
-            const totalFees = tutionData.finalAmountToParent;
-            const totalDurationOfSessionTaken =
-              tutionData.totalDurationOfSessionTaken;
-            const toNewDate = new Date(
-              new Date(toDate).setDate(new Date(toDate).getDate() + 5)
-            ).toLocaleDateString("en-GB");
-            var stringBuilder = "";
-            stringBuilder += `SMARTPOINT E-PAY\n`;
-            stringBuilder += `Class hour updates\n`;
-            stringBuilder += `(${fromDate
-              .split("-")
-              .reverse()
-              .join(".")} to ${toDate.split("-").reverse().join(".")})\n\n`;
-            stringBuilder += `Tuition ID: ${tutorId}\n`;
-            stringBuilder += `Tutor: ${tutorName}\n\n`;
-            classesAttended.forEach((cls) => {
-              stringBuilder += `${cls["Session Date"]
-                .split("-")
-                .reverse()
-                .join("-")}- ${cls["Duration of Session taken"]} hrs \n`;
-            });
-            stringBuilder += `--------------------------`;
-            stringBuilder += `\nTotal class hours: ${totalDurationOfSessionTaken} hrs`;
-            stringBuilder += `\nTotal Fees: ${totalFees}/-\n`;
-            stringBuilder += `\nAccount No: 39891065373`;
-            stringBuilder += `\nIFSC CODE: SBIN0009485`;
-            stringBuilder += `\nAmount payable : ${totalFees}/-`;
-            stringBuilder += `\nG-pay No: +91 8848083747`;
-            stringBuilder += `\nPayment due date: ${toNewDate}\n`;
-            stringBuilder += `\nNote: Please confirm the payment by sharing a screenshot`;
-            const resultToWhatsapp = stringBuilder;
-            // // // console.log("resultToWhatsapp ", resultToWhatsapp);
-            return (
-              <div>
-                <div tutorKey={index} className="tution-box">
-                  <p>SMARTPOINT E-PAY</p>
-                  <p>Class hour updates</p>
-                  <p>
-                    ({fromDate.split("-").reverse().join(".")}{" "}
-                    {toDate.split("-").reverse().join(".")})
-                  </p>
-                  <p>Tutor Name: {tutorName}</p>
-                  <p>Tuition ID: {tutorId}</p>
-                  <p>Session Date and Duration of Session:</p>
-                  {classesAttended.map((cls, clsIndex) => (
-                    <div tutorKey={clsIndex}>
-                      <p>{`${cls["Session Date"]
-                        .split("-")
-                        .reverse()
-                        .join("-")} ${cls["Duration of Session taken"]}`}</p>
-                    </div>
-                  ))}
-                  <p>Total class hours: {totalDurationOfSessionTaken}</p>
-                  <p>Total Fees: {totalFees}</p>
-                  <p>Account No: 39891065373</p>
-                  <p>IFSC CODE: SBIN0009485</p>
-                  <p>Amount payable : {totalFees}/-</p>
-                  <p>G-pay No: +91 8848083747</p>
-                  <p>Payment due date: {toNewDate}</p>
-                  <p>
-                    Note: Please confirm the payment by sharing a screenshot
-                  </p>
-                </div>
-                <WhatsAppSender resultToWhatsapp={resultToWhatsapp} />
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <TutionDetailsWrapper
+        combinedAndSortedData={combinedAndSortedData}
+        fromDate={fromDate}
+        toDate={toDate}
+      />
     </div>
   );
 };
