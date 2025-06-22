@@ -19,7 +19,7 @@ import TutionDetailsWrapper from './TutionDetailsWrapper'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 const ExcelReader = () => {
   const [excelData, setExcelData] = useState(null);
   const [excelData2, setExcelData2] = useState(null);
@@ -76,23 +76,18 @@ const ExcelReader = () => {
       onDrop: onDrop2,
     });
   const handleFromDateChange = (newValue) => {
-    if (newValue) {
-      const formattedDate = format(newValue, 'dd-MM-yyyy');
-      
+    if (newValue) {      
       setFromDate(newValue); // Keep original Date object
     }
   };
   const handleToDateChange = (newValue) => {
     if (newValue) {
-      const formattedDate = format(newValue, 'dd-MM-yyyy');
-      
       setToDate(newValue); // Keep original Date object
     }
   };
   const handlePayrollChange = (newValue) => {
     if (newValue) {
-      const formattedDate = format(newValue, 'dd-MM-yyyy');
-      
+      // const formattedDate = format(newValue, 'dd-MM-yyyy');
       setPayroll(newValue); // Keep original Date object
     }
   };
