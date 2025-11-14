@@ -97,9 +97,16 @@ export function combineData(uniqueData, tutorTotalDuration) {
     const combinedData = [];
     uniqueData.forEach((record) => {
       const tutorID = record.tutorID;
-      const tutorDurationObject = tutorTotalDuration.find(
-        (obj) => Object.keys(obj)[0].split(" ")[0] === tutorID
-      );
+      console.log("tutorID ",tutorID)
+            console.table("tutorTotalDuration",tutorTotalDuration);
+
+  const tutorDurationObject = tutorTotalDuration.find(obj => {
+  const key = Object.keys(obj)[0].trim();   // removes leading/trailing spaces
+  const keyId = key.split(":")[0].trim();   // extracts "720" safely
+  return keyId === String(tutorID);
+});
+
+      console.table("tutorDurationObject",tutorDurationObject);
       let totalDurationOfSessionTaken = [];
       let classesAttended = [];
       let parentPhoneNumber = [];
